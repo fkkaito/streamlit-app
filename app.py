@@ -19,6 +19,9 @@ if "tasks" not in st.session_state:
 if "new_task" not in st.session_state:
     st.session_state.new_task = ""
 
+if "task_input" not in st.session_state:
+    st.session_state.task_input = ""
+
 # タスクをJSONファイルに保存
 def save_tasks():
     with open(TODOS_FILE, "w", encoding="utf-8") as f:
@@ -41,13 +44,19 @@ with col1:
 with col2:
     if st.button("追加", key="add_button"):
         if new_task.strip():
+            # セッション状態にタスクを追加
             st.session_state.tasks.append({
-                "task": new_task,
+                "task": new_task.strip(),
                 "done": False
             })
+            # ファイルに保存
             save_tasks()
+            # 入力欄をクリア
             st.session_state.task_input = ""
+            # UI を再描画
             st.rerun()
+        else:
+            st.warning("タスクを入力してください")
 
 st.markdown("---")
 
